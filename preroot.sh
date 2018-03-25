@@ -3,8 +3,7 @@
 
 echo "<INFO> Installing pipplware Kodi repository"
 echo "<INFO> Copying kodi.list to /etc/apt/sources.list.d/"
-echo $6
-cp -f "$6/data/kodi.list" /etc/apt/sources.list.d/
+cp -f data/kodi.list /etc/apt/sources.list.d/
 echo "<INFO> Adding repo key to apt trusted keys"
 wget -O - http://pipplware.pplware.pt/pipplware/key.asc | apt-key add - 
 
