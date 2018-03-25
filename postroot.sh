@@ -25,6 +25,13 @@
 	# chown root:root $LBHOMEDIR/system/cron/cron.d/$2
 # fi
 
+echo "<INFO> Stopping Kodi if it is running..."
+systemctl stop kodi
+echo "<INFO> Try to kill remaining Kodi processes..."
+killall kodi
+killall kodi_v7.bin
+killall kodi-standalone
+
 echo "<INFO> Creating user kodi"
 # useradd kodi
 useradd -d /home/kodi kodi
