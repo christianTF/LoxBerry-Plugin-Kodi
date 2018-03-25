@@ -41,4 +41,7 @@ chmod +x /etc/init.d/kodi
 echo "<INFO> Install Kodi to run automatically at startup"
 systemctl enable kodi
 
+echo "<INFO> Setting GPU memory to 192MB in config.txt"
+awk -v s="gpu_mem=192" '/^gpu_mem=/{$0=s;f=1} {a[++n]=$0} END{if(!f)a[++n]=s;for(i=1;i<=n;i++)print a[i]>ARGV[1]}' /boot/config.txt
+
 exit 0
