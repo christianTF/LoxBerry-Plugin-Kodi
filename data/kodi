@@ -24,7 +24,7 @@ GEOMETRY=/var/run/kodi.fbset
 
 # Defaults
 ENABLED=1
-USER=loxberry
+USER=kodi
 NICE=0
 
 # Exit if the package is not installed
