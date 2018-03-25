@@ -36,7 +36,8 @@ usermod -a -G tty loxberry
 
 # Install Kodi as a service
 echo "<INFO> Copy init.d startup script"
-cp -f data/kodi /etc/init.d/
+cp -f data/kodi /etc/init.d/kodi
+chmod +x /etc/init.d/kodi
 echo "<INFO> Install Kodi to run automatically at startup"
 systemctl enable kodi
 
