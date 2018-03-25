@@ -54,8 +54,8 @@ awk -v s="gpu_mem=192" '/^gpu_mem=/{$0=s;f=1} {a[++n]=$0} END{if(!f)a[++n]=s;for
 
 echo "<INFO> Creating Kodi settings directory"
 mkdir -p /home/kodi/.kodi/userdata
-cp data/advancedsettings.xml /home/kodi/.kodi/userdata
-cp -R data/addons/* /home/kodi/.kodi/addons/
+cp -v data/advancedsettings.xml /home/kodi/.kodi/userdata
+cp -v -R data/addons/ /home/kodi/.kodi/addons/
 chown -R kodi /home/kodi
 
 exit 0
