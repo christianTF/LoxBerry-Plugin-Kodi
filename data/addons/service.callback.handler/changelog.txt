@@ -1,0 +1,11 @@
+v1.0
+- Initial version
+
+- send Audio- and Video-Functions to an UDP port
+- set startup Volume
+
+v1.1
+- Send XBMC start and stop status
+
+v1.2
+- send "movie_title=%s"
