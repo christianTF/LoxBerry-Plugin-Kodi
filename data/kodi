@@ -30,6 +30,10 @@ NICE=0
 # Exit if the package is not installed
 [ -x "$STARTAS" ] || exit 0
 
+# Read Kodi-LoxBerry-Plugin configuration variable file if it is present
+[ -r REPLACELBPCONFIGDIR/kodiconfig ] && . REPLACELBPCONFIGDIR/kodiconfig
+
+
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
