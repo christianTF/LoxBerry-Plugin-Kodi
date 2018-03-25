@@ -25,7 +25,8 @@
 	# chown root:root $LBHOMEDIR/system/cron/cron.d/$2
 # fi
 
-
+# Add loxberry user to groups
+echo "<INFO> Adding loxberry to groups audio, video, input, dialout, plugdev, tty"
 usermod -a -G audio loxberry
 usermod -a -G video loxberry
 usermod -a -G input loxberry
@@ -33,8 +34,10 @@ usermod -a -G dialout loxberry
 usermod -a -G plugdev loxberry
 usermod -a -G tty loxberry
 
-
-
-
+# Install Kodi as a service
+echo "<INFO> Copy init.d startup script"
+cp -f data/kodi /etc/init.d/
+echo "<INFO> Install Kodi to run automatically at startup"
+systemctl enable kodi
 
 exit 0
