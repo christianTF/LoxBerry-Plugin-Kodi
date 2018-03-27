@@ -11,9 +11,9 @@ my  $version = "0.1.1";
 
 if ($R::action eq "kodiautostart") {
 	if (is_enabled($R::key)) {
-		system("sudo systemctl enable kodi");
+		system("systemctl enable kodi");
 	} elsif (is_disabled($R::key)) {
-		system("sudo systemctl disable kodi");
+		system("systemctl disable kodi");
 	}
 	print $cgi->header(-type => 'application/json;charset=utf-8',
 					-status => "200 OK");
@@ -23,8 +23,21 @@ if ($R::action eq "kodiautostart") {
 
 if ($R::action eq "change") {
 	my $success;
-	if ($R::key eq "licvc1" || $R::key eq "licmpeg2") {
-		print qx { sudo $lbpbindir/elevatedhelper.pl action=change key=$R::key value=$R::value }
+	if ($R::key eq "licvc1") {
+		$success = replace_str_in_file("/boot/config.txt", "decode_WVC1=", "decode_WVC1=$R::value");
+	}
+	if ($R::key eq "licmpeg2") {
+		$success = replace_str_in_file("/boot/config.txt", "decode_MPG2=", "decode_MPG2=$R::value");
+	}
+
+	if ($success) {
+		print $cgi->header(-type => 'application/json;charset=utf-8',
+					-status => "200 OK");
+		print "{status: 'OK', error: 0, key: '$R::key', value: '$R::value'}";
+	} else {
+		print $cgi->header(-type => 'application/json;charset=utf-8',
+					-status => "500 Error");
+		print "{status: 'Error', error: 1, key: '$R::key', value: '$R::value'}";
 	}
 	exit;
 

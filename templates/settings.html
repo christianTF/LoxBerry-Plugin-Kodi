@@ -1,4 +1,47 @@
 <center>
 <img src="icon_128.png">
+<form>
+<div class="ui-field-contain">     
+	 <label for="licmpeg2">Raspberry MPEG-2 licence key</label>
+     <input type="text" name="licmpeg2" id="licmpeg2" data-mini="true" value="">
+</div>
+<div class="ui-field-contain">     
+     <label for="licvc1">Raspberry VC-1 licence key</label>
+     <input type="text" name="licvc1" id="licvc1" data-mini="true" value="">
+</div>
+</form>
 
 </center>
+
+
+<script>
+$(document).on('pageinit', function() {
+
+	$( ":input" ).blur(function(e){change_value("change", e.target.id, $(this).val())});
+
+});
+
+
+function change_value (action, key, value)
+{
+	console.log("Action is", action, "Key is", key, "Value is", value);
+/*	if (value === oldvalue) {
+		console.log("Nothing changed.");
+		return;
+	}
+*/
+	url = "ajax.cgi";
+	$.post( url, { 	action: action,
+					key: key,
+					value: value,
+				 })
+				 .done(function(data, status){
+				 console.log("Data:", data, "Status", status);
+			 }
+			);
+
+}
+
+
+
+</script>
