@@ -24,13 +24,16 @@ if ($R::action eq "kodiautostart") {
 if ($R::action eq "change") {
 	my $success;
 	if ($R::key eq "licvc1" || $R::key eq "licmpeg2") {
-		print qx { sudo $lbpbindir/elevatedhelper.pl action=change key=$R::key value=$R::value }
+		print qx { sudo $lbpbindir/elevatedhelper.pl action=change key=$R::key value=$R::value };
 	}
 	exit;
 
 }
 
-
+if ($R::action eq "query") {
+	print qx { sudo $lbpbindir/elevatedhelper.pl action=query };
+	exit;
+}
 
 
 
@@ -41,47 +44,3 @@ if ($R::action eq "change") {
 
 exit;
 
-
-sub replace_str_in_file
-{
-	my ($filename, $findstr, $replacestr) = @_;
-	
-	my $newfilestr;
-	my $foundstr;
-	
-	exit 0 if (! $filename || ! $findstr);
-	
-	eval {
-
-		open(my $fh, '<', $filename)
-		  or warn "Could not open file for reading: '$filename' $!";
-		  
-		while (my $row = <$fh>) {
-			if (begins_with($row, $findstr)) {
-				print STDERR "Found string - rewriting it";
-				$newfilestr .= "$replacestr\n";
-				$foundstr = 1;
-			} else {
-				$newfilestr .= $row;
-			}
-		}
-		close $fh;
-		if (! $foundstr) {
-			print STDERR "Adding missing string";
-			$newfilestr .= "$replacestr\n";
-		}
-		
-		open($fh, '>', $filename)
-			or warn "Could not open file for writing: '$filename' $!";
-		print $fh $newfilestr;
-		close $fh;
-		
-	};
-	if ($@) {
-		print STDERR "Something failed writing the new entry to file $filename.";
-		exit 0;
-	}
-
-	exit 1;
-
-}
