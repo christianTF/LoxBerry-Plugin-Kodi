@@ -86,6 +86,9 @@ if ($R::action eq "service") {
 	if ($R::key eq "kodi" && $R::value eq "start") {
 		qx { systemctl start kodi };
 	} 
+	if ($R::key eq "kodi" && $R::value eq "restart") {
+		qx { systemctl restart kodi };
+	} 
 	my $rc = $?;
 	$rc = $rc >> 8 unless ($rc == -1);
 	if ($rc eq "0") {
