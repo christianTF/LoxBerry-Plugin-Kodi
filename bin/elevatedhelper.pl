@@ -9,18 +9,6 @@ our $cgi = CGI->new;
 $cgi->import_names('R');
 my  $version = "0.1.1";
 
-if ($R::action eq "kodiautostart") {
-	if (is_enabled($R::key)) {
-		system("systemctl enable kodi");
-	} elsif (is_disabled($R::key)) {
-		system("systemctl disable kodi");
-	}
-	print $cgi->header(-type => 'application/json;charset=utf-8',
-					-status => "200 OK");
-	print '{"status":"OK", "error":0}';
-	exit;
-}
-
 if ($R::action eq "change") {
 	my $success;
 	if ($R::key eq "licvc1") {
@@ -30,6 +18,15 @@ if ($R::action eq "change") {
 		$success = replace_str_in_file("/boot/config.txt", "decode_MPG2=", "decode_MPG2=$R::value");
 	}
 
+	if ($R::key eq "kodiautostart") {
+		if (is_enabled($R::value)) {
+			system("systemctl enable kodi");
+		} else {
+			system("systemctl disable kodi");
+		}
+		$success = 1;
+	}
+	
 	if ($success) {
 		print $cgi->header(-type => 'application/json;charset=utf-8',
 					-status => "200 OK");
@@ -56,12 +53,15 @@ if ($R::action eq "query") {
 	chomp ($mpeg2status);
 	chomp ($vc1status);
 	
+	my $kodi_autostart = qx { systemctl is-enabled kodi };
+	my $rc = $?;
+	$rc = $rc >> 8 unless ($rc == -1);
+	$kodi_autostart = $rc == 0 ? 1 : 0;
 	
-	#$mpeg2status = is_enabled($mpeg2status) ? 1 : 0;
-	#$vc1status = is_enabled($vc1status) ? 1 : 0;
-	
-	
-	
+	my $kodi_started = qx { systemctl is-active kodi };
+	$rc = $?;
+	$rc = $rc >> 8 unless ($rc == -1);
+	$kodi_started = $rc == 0 ? 1 : 0;
 	
 	
 	print $cgi->header(-type => 'application/json;charset=utf-8',
@@ -71,17 +71,34 @@ if ($R::action eq "query") {
 		'"vc1lic":"' . $vc1lic . '",' . 
 		'"piserial":"' . $piserial . '",' . 
 		'"mpeg2status":"' . $mpeg2status . '",' . 
-		'"vc1status":"' . $vc1status . '"' . 
+		'"vc1status":"' . $vc1status . '",' . 
+		'"kodiautostart":"' . $kodi_autostart . '",' . 
+		'"kodistarted":"' . $kodi_started . '"' . 
 	
 	'}';
 	exit;
-	
-	
-	
-	
-	
 }
 
+if ($R::action eq "service") {
+	if ($R::key eq "kodi" && $R::value eq "stop") {
+		qx { systemctl stop kodi };
+	} 
+	if ($R::key eq "kodi" && $R::value eq "start") {
+		qx { systemctl start kodi };
+	} 
+	my $rc = $?;
+	$rc = $rc >> 8 unless ($rc == -1);
+	if ($rc eq "0") {
+		print $cgi->header(-type => 'application/json;charset=utf-8',
+					-status => "200 OK");
+		print "{\"status\":\"OK\", \"error\": 0, \"key\": \"$R::key\", \"value\": \"$R::value\"}";
+	} else {
+		print $cgi->header(-type => 'application/json;charset=utf-8',
+					-status => "500 Error");
+		print "{\"status\": \"Error\", \"error\": 1, \"key\": \"$R::key\", \"value\": \"$R::value\"}";
+	}
+	exit;
+}
 
 
 
