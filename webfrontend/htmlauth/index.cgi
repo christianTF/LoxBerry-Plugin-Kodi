@@ -40,7 +40,7 @@ $navbar{1}{active} = 1;
 
 $maintemplate->param( PLUGINNAME => 'KODI for LoxBerry' );
 
-LoxBerry::Web::lbheader("KODI for LoxBerry", "http://www.loxwiki.eu:80");
+LoxBerry::Web::lbheader("KODI for LoxBerry", "http://www.loxwiki.eu:80", "kodi_main.html");
 print LoxBerry::Log::get_notifications_html($lbpplugindir);
 print $maintemplate->output;
 LoxBerry::Web::lbfooter();
